@@ -16,4 +16,16 @@ ImGui::BeginChild(
 ```
 
 # install 
-Copy `imguiEx_EnumClass.hpp` and `#include` it.
+Copy `imgui_EnumClass.hpp` into your include directory and `#include` it.
+
+or use `CMake`
+```cmake
+add_subdirectory(path-to-this-library)
+
+# use imgui_EnumClass to add include directory
+target_link_libraries(
+  your-target
+  imgui_EnumClass
+  other-libs
+)
+```
