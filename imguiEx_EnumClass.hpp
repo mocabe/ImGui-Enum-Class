@@ -7,16 +7,10 @@
 namespace ImGui {
 
   namespace ec_detail {
-    /// get value of enum class
-    template <class E, class U>
-    constexpr decltype(auto) from_underlying_type(U&& u) {
-      static_asset(std::is_same_v<std::underlying_type_t<E>, U>);
-      return static_cast<E>(std::forward<U>(u));
-    }
     /// create enum class from value
     template <class E>
-    constexpr decltype(auto) to_underlying_type(E&& e) {
-      return static_cast<std::underlying_type_t<E>>(std::forward<E>(e));
+    constexpr std::underlying_type_t<E> to_underlying_type(E e) {
+      return static_cast<std::underlying_type_t<E>>(e);
     }
     /// trait class to use SFINAE on enum class types
     template <class T>
@@ -31,69 +25,63 @@ namespace ImGui {
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr Flag operator|(const Flag& lhs, const Flag& rhs) {
+  constexpr Flag operator|(Flag lhs, Flag rhs) {
     using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) | to_underlying_type(rhs));
+    return static_cast<Flag>(to_underlying_type(lhs) | to_underlying_type(rhs));
   }
 
   // operator|=
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr void operator|=(Flag& lhs, const Flag& rhs) {
-    using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) |= to_underlying_type(rhs));
+  constexpr Flag& operator|=(Flag& lhs, Flag rhs) {
+    lhs = lhs | rhs;
+    return lhs;
   }
 
   // operator&
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr Flag operator&(const Flag& lhs, const Flag& rhs) {
+  constexpr Flag operator&(Flag lhs, Flag rhs) {
     using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) & to_underlying_type(rhs));
+    return static_cast<Flag>(to_underlying_type(lhs) & to_underlying_type(rhs));
   }
 
   // operator&=
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr void operator&=(Flag& lhs, const Flag& rhs) {
-    using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) &= to_underlying_type(rhs));
+  constexpr Flag& operator&=(Flag& lhs, Flag rhs) {
+    lhs = lhs & rhs;
+    return lhs;
   }
 
   // operator^
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr Flag operator^(const Flag& lhs, const Flag& rhs) {
+  constexpr Flag operator^(Flag lhs, Flag rhs) {
     using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) ^ to_underlying_type(rhs));
+    return static_cast<Flag>(to_underlying_type(lhs) ^ to_underlying_type(rhs));
   }
 
   // operator^=
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr void operator^=(Flag& lhs, const Flag& rhs) {
-    using namespace ec_detail;
-    return from_underlying_type<Flag>(
-      to_underlying_type(lhs) ^= to_underlying_type(rhs));
+  constexpr Flag& operator^=(Flag& lhs, Flag rhs) {
+    lhs = lhs ^ rhs;
+    return lhs;
   }
 
   // operator~
   template <
     class Flag,
     std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
-  constexpr void operator~(const Flag& flag) {
+  constexpr Flag operator~(Flag flag) {
     using namespace ec_detail;
-    return from_underlying_type<Flag>(~to_underlying_type(flag));
+    return static_cast<Flag>(~(to_underlying_type(flag)));
   }
 
   // ----------------------------------------
@@ -146,6 +134,22 @@ namespace ImGui {
     ModalWindowDimBg      = ImGuiCol_ModalWindowDimBg,
   };
 
+  inline void PushStyleColor(Col idx, ImU32 col) {
+    return PushStyleColor(static_cast<ImGuiCol>(idx), col);
+  }
+  inline void PushStyleColor(Col idx, const ImVec4& col) {
+    return PushStyleColor(static_cast<ImGuiCol>(idx), col);
+  }
+  inline const ImVec4& GetStyleColorVec4(ImGuiCol idx) {
+    return GetStyleColorVec4(static_cast<ImGuiCol>(idx));
+  }
+  inline ImU32 GetColorU32(Col idx, float alpha_mul = 1.0f) {
+    return GetColorU32(static_cast<ImGuiCol>(idx), alpha_mul);
+  }
+
+  // ----------------------------------------
+  // Cond
+
   /// ImGuiCond
   enum class Cond : int {
     Always       = ImGuiCond_Always,
@@ -197,6 +201,71 @@ namespace ImGui {
     Float  = ImGuiDataType_Float,
     Double = ImGuiDataType_Double,
   };
+  inline bool DragScalar(
+    const char* label,
+    DataType data_type,
+    void* v,
+    float v_speed,
+    const void* v_min  = NULL,
+    const void* v_max  = NULL,
+    const char* format = NULL,
+    float power        = 1.0f) {
+    return ImGui::DragScalar(
+      label, static_cast<ImGuiDataType>(data_type), v, v_speed, v_min, v_max,
+      format, power);
+  }
+  inline bool DragScalarN(
+    const char* label,
+    DataType data_type,
+    void* v,
+    int components,
+    float v_speed,
+    const void* v_min  = NULL,
+    const void* v_max  = NULL,
+    const char* format = NULL,
+    float power        = 1.0f) {
+    return ImGui::DragScalarN(
+      label, static_cast<ImGuiDataType>(data_type), v, components, v_speed,
+      v_min, v_max, format, power);
+  }
+  inline bool SliderScalar(
+    const char* label,
+    DataType data_type,
+    void* v,
+    const void* v_min,
+    const void* v_max,
+    const char* format = NULL,
+    float power        = 1.0f) {
+    return ImGui::SliderScalar(
+      label, static_cast<ImGuiDataType>(data_type), v, v_min, v_max, format,
+      power);
+  }
+  inline bool SliderScalarN(
+    const char* label,
+    DataType data_type,
+    void* v,
+    int components,
+    const void* v_min,
+    const void* v_max,
+    const char* format = NULL,
+    float power        = 1.0f) {
+    return ImGui::SliderScalarN(
+      label, static_cast<ImGuiDataType>(data_type), v, components, v_min, v_max,
+      format, power);
+  }
+  inline bool VSliderScalar(
+    const char* label,
+    const ImVec2& size,
+    DataType data_type,
+    void* v,
+    const void* v_min,
+    const void* v_max,
+    const char* format = NULL,
+    float power        = 1.0f) {
+    return ImGui::VSliderScalar(
+      label, size, static_cast<ImGuiDataType>(data_type), v, v_min, v_max,
+      format, power);
+  }
 
   // ----------------------------------------
   // Dir
@@ -209,6 +278,10 @@ namespace ImGui {
     Up    = ImGuiDir_Up,
     Down  = ImGuiDir_Down,
   };
+
+  inline bool ArrowButton(const char* str_id, Dir dir) {
+    return ImGui::ArrowButton(str_id, static_cast<ImGuiDir>(dir));
+  }
 
   // ----------------------------------------
   // Key
@@ -237,6 +310,10 @@ namespace ImGui {
     Y          = ImGuiKey_Y,
     Z          = ImGuiKey_Z,
   };
+
+  inline int GetKeyIndex(Key imgui_key) {
+    return ImGui::GetKeyIndex(static_cast<ImGuiKey>(imgui_key));
+  }
 
   // ----------------------------------------
   // NavInput
@@ -277,6 +354,12 @@ namespace ImGui {
     ResizeNWSE = ImGuiMouseCursor_ResizeNWSE,
     Hand       = ImGuiMouseCursor_Hand,
   };
+  inline MouseCursor GetMouseCursor([[maybe_unused]] MouseCursor dummy) {
+    return static_cast<MouseCursor>(ImGui::GetMouseCursor());
+  }
+  inline void SetMouseCursor(MouseCursor type) {
+    return ImGui::SetMouseCursor(static_cast<ImGuiMouseCursor>(type));
+  }
 
   // ----------------------------------------
   // StyleVar
@@ -306,6 +389,13 @@ namespace ImGui {
     ButtonTextAlign   = ImGuiStyleVar_ButtonTextAlign,
   };
 
+  inline void PushStyleVar(StyleVar idx, float val) {
+    return ImGui::PushStyleVar(static_cast<ImGuiStyleVar>(idx), val);
+  }
+  inline void PushStyleVar(StyleVar idx, const ImVec2& val) {
+    return ImGui::PushStyleVar(static_cast<ImGuiStyleVar>(idx), val);
+  }
+
   // ----------------------------------------
   // DrawCornerFlags
 
@@ -324,6 +414,52 @@ namespace ImGui {
 
   template <>
   struct ec_detail::is_enum_flag<DrawCornerFlags> : std::true_type {};
+
+  inline void AddRect(
+    ImDrawList* draw_list,
+    const ImVec2& a,
+    const ImVec2& b,
+    ImU32 col,
+    float rounding,
+    DrawCornerFlags rounding_corners_flags,
+    float thickness = 1.0f) {
+    return draw_list->AddRect(
+      a, b, col, rounding, static_cast<int>(rounding_corners_flags), thickness);
+  }
+
+  inline void AddRectFilled(
+    ImDrawList* draw_list,
+    const ImVec2& a,
+    const ImVec2& b,
+    ImU32 col,
+    float rounding,
+    DrawCornerFlags rounding_corners_flags) {
+    return draw_list->AddRectFilled(
+      a, b, col, rounding, static_cast<int>(rounding_corners_flags));
+  }
+  inline void PathRect(
+    ImDrawList* draw_list,
+    const ImVec2& rect_min,
+    const ImVec2& rect_max,
+    float rounding,
+    DrawCornerFlags rounding_corners_flags) {
+    return draw_list->PathRect(
+      rect_min, rect_max, rounding, static_cast<int>(rounding_corners_flags));
+  }
+  inline void AddImageRounded(
+    ImDrawList* draw_list,
+    ImTextureID user_texture_id,
+    const ImVec2& a,
+    const ImVec2& b,
+    const ImVec2& uv_a,
+    const ImVec2& uv_b,
+    ImU32 col,
+    float rounding,
+    DrawCornerFlags rounding_corners) {
+    return draw_list->AddImageRounded(
+      user_texture_id, a, b, uv_a, uv_b, col, rounding,
+      static_cast<int>(rounding_corners));
+  }
 
   // ----------------------------------------
   // DrawListFlags
@@ -395,6 +531,41 @@ namespace ImGui {
   template <>
   struct ec_detail::is_enum_flag<ColorEditFlags> : std::true_type {};
 
+  inline bool ColorEdit3(
+    const char* label, float col[3], ColorEditFlags flags) {
+    return ImGui::ColorEdit3(
+      label, col, static_cast<ImGuiColorEditFlags>(flags));
+  }
+  inline bool ColorEdit4(
+    const char* label, float col[4], ColorEditFlags flags) {
+    return ImGui::ColorEdit4(
+      label, col, static_cast<ImGuiColorEditFlags>(flags));
+  }
+  inline bool ColorPicker3(
+    const char* label, float col[3], ColorEditFlags flags) {
+    return ImGui::ColorPicker3(
+      label, col, static_cast<ImGuiColorEditFlags>(flags));
+  }
+  inline bool ColorPicker4(
+    const char* label,
+    float col[4],
+    ColorEditFlags flags,
+    const float* ref_col = NULL) {
+    return ImGui::ColorPicker4(
+      label, col, static_cast<ImGuiColorEditFlags>(flags), ref_col);
+  }
+  inline bool ColorButton(
+    const char* desc_id,
+    const ImVec4& col,
+    ColorEditFlags flags,
+    ImVec2 size = ImVec2(0, 0)) {
+    return ImGui::ColorButton(
+      desc_id, col, static_cast<ImGuiColorEditFlags>(flags), size);
+  }
+  inline void SetColorEditOptions(ColorEditFlags flags) {
+    return ImGui::SetColorEditOptions(static_cast<ImGuiColorEditFlags>(flags));
+  }
+
   // ----------------------------------------
   // ColumnsFlags
 
@@ -444,6 +615,12 @@ namespace ImGui {
   template <>
   struct ec_detail::is_enum_flag<ComboFlags> : std::true_type {};
 
+  inline bool BeginCombo(
+    const char* label, const char* preview_value, ComboFlags flags) {
+    return ImGui::BeginCombo(
+      label, preview_value, static_cast<ImGuiComboFlags>(flags));
+  }
+
   // ----------------------------------------
   // DragDropFlags
 
@@ -469,6 +646,15 @@ namespace ImGui {
   template <>
   struct ec_detail::is_enum_flag<DragDropFlags> : std::true_type {};
 
+  inline bool BeginDragDropSource(ImGuiDragDropFlags flags) {
+    return ImGui::BeginDragDropSource(static_cast<ImGuiDragDropFlags>(flags));
+  }
+  inline const ImGuiPayload* AcceptDragDropPayload(
+    const char* type, ImGuiDragDropFlags flags) {
+    return ImGui::AcceptDragDropPayload(
+      type, static_cast<ImGuiDragDropFlags>(flags));
+  }
+
   // ----------------------------------------
   // FocusedFlags
 
@@ -483,6 +669,10 @@ namespace ImGui {
 
   template <>
   struct ec_detail::is_enum_flag<FocusedFlags> : std::true_type {};
+
+  inline bool IsWindowFocused(FocusedFlags flags) {
+    return ImGui::IsWindowFocused(static_cast<ImGuiFocusedFlags>(flags));
+  }
 
   // ----------------------------------------
   // HoverredFlags
@@ -506,6 +696,13 @@ namespace ImGui {
 
   template <>
   struct ec_detail::is_enum_flag<HoveredFlags> : std::true_type {};
+
+  inline bool IsWindowHovered(HoveredFlags flags) {
+    return ImGui::IsWindowHovered(static_cast<ImGuiHoveredFlags>(flags));
+  }
+  inline bool IsItemHovered(HoveredFlags flags) {
+    return ImGui::IsItemHovered(static_cast<ImGuiHoveredFlags>(flags));
+  }
 
   // ----------------------------------------
   // InputTextFlags
@@ -643,20 +840,19 @@ namespace ImGui {
 
   inline bool InputScalar(
     const char* label,
-    ImGuiDataType data_type,
+    DataType data_type,
     void* v,
     const void* step,
     const void* step_fast,
     const char* format,
     InputTextFlags extra_flags) {
     return ImGui::InputScalar(
-      label, data_type, v, step, step_fast, format,
+      label, static_cast<ImGuiDataType>(data_type), v, step, step_fast, format,
       static_cast<ImGuiInputTextFlags>(extra_flags));
   }
-
   inline bool InputScalarN(
     const char* label,
-    ImGuiDataType data_type,
+    DataType data_type,
     void* v,
     int components,
     const void* step,
@@ -664,8 +860,8 @@ namespace ImGui {
     const char* format,
     InputTextFlags extra_flags) {
     return ImGui::InputScalarN(
-      label, data_type, v, components, step, step_fast, format,
-      static_cast<ImGuiInputTextFlags>(extra_flags));
+      label, static_cast<ImGuiDataType>(data_type), v, components, step,
+      step_fast, format, static_cast<ImGuiInputTextFlags>(extra_flags));
   }
 
   // ----------------------------------------
@@ -682,6 +878,23 @@ namespace ImGui {
 
   template <>
   struct ec_detail::is_enum_flag<SelectableFlags> : std::true_type {};
+
+  inline bool Selectable(
+    const char* label,
+    bool selected,
+    SelectableFlags flags,
+    const ImVec2& size = ImVec2(0, 0)) {
+    return ImGui::Selectable(
+      label, selected, static_cast<ImGuiSelectableFlags>(flags), size);
+  }
+  inline bool Selectable(
+    const char* label,
+    bool* p_selected,
+    SelectableFlags flags,
+    const ImVec2& size = ImVec2(0, 0)) {
+    return ImGui::Selectable(
+      label, p_selected, static_cast<ImGuiSelectableFlags>(flags), size);
+  }
 
   // ----------------------------------------
   // TreeNodeFlags
@@ -708,6 +921,44 @@ namespace ImGui {
 
   template <>
   struct ec_detail::is_enum_flag<TreeNodeFlags> : std::true_type {};
+
+  inline bool TreeNodeEx(const char* label, TreeNodeFlags flags) {
+    return ImGui::TreeNodeEx(label, static_cast<ImGuiTreeNodeFlags>(flags));
+  }
+
+  template <class... Args>
+  inline bool TreeNodeEx(
+    const char* str_id, TreeNodeFlags flags, const char* fmt, Args&&... args) {
+    return ImGui::TreeNodeEx(
+      str_id, static_cast<ImGuiTreeNodeFlags>(flags), fmt,
+      std::forward<Args>(args)...);
+  }
+  template <class... Args>
+  inline bool TreeNodeEx(
+    const void* ptr_id, TreeNodeFlags flags, const char* fmt, Args&&... args) {
+    return ImGui::TreeNodeEx(
+      ptr_id, static_cast<ImGuiTreeNodeFlags>(flags), fmt,
+      std::forward<Args>(args)...);
+  }
+  inline bool TreeNodeExV(
+    const char* str_id, TreeNodeFlags flags, const char* fmt, va_list args) {
+    return ImGui::TreeNodeExV(
+      str_id, static_cast<ImGuiTreeNodeFlags>(flags), fmt, args);
+  }
+  inline bool TreeNodeExV(
+    const void* ptr_id, TreeNodeFlags flags, const char* fmt, va_list args) {
+    return ImGui::TreeNodeExV(
+      ptr_id, static_cast<ImGuiTreeNodeFlags>(flags), fmt, args);
+  }
+  inline bool CollapsingHeader(const char* label, TreeNodeFlags flags) {
+    return ImGui::CollapsingHeader(
+      label, static_cast<ImGuiTreeNodeFlags>(flags));
+  }
+  inline bool CollapsingHeader(
+    const char* label, bool* p_open, TreeNodeFlags flags) {
+    return CollapsingHeader(
+      label, p_open, static_cast<ImGuiTreeNodeFlags>(flags));
+  }
 
   // ----------------------------------------
   // WindowFlags
@@ -744,6 +995,28 @@ namespace ImGui {
 
   inline bool Begin(const char* name, bool* p_open, WindowFlags flags) {
     return Begin(name, p_open, static_cast<ImGuiWindowFlags>(flags));
+  }
+  inline bool BeginChild(
+    const char* str_id, const ImVec2& size, bool border, WindowFlags flags) {
+    return ImGui::BeginChild(
+      str_id, size, border, static_cast<ImGuiWindowFlags>(flags));
+  }
+  inline bool BeginChild(
+    ImGuiID id, const ImVec2& size, bool border, WindowFlags flags) {
+    return ImGui::BeginChild(
+      id, size, border, static_cast<ImGuiWindowFlags>(flags));
+  }
+  inline bool BeginPopup(const char* str_id, WindowFlags flags) {
+    return ImGui::BeginPopup(str_id, static_cast<ImGuiWindowFlags>(flags));
+  }
+  inline bool BeginPopupModal(
+    const char* name, bool* p_open, WindowFlags flags) {
+    return ImGui::BeginPopupModal(
+      name, p_open, static_cast<ImGuiWindowFlags>(flags));
+  }
+  inline bool BeginChildFrame(
+    ImGuiID id, const ImVec2& size, WindowFlags flags) {
+    return ImGui::BeginChild(id, size, static_cast<ImGuiWindowFlags>(flags));
   }
 
 } // namespace ImGui
