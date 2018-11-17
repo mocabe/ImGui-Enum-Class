@@ -140,7 +140,7 @@ namespace ImGui {
   inline void PushStyleColor(Col idx, const ImVec4& col) {
     return PushStyleColor(static_cast<ImGuiCol>(idx), col);
   }
-  inline const ImVec4& GetStyleColorVec4(ImGuiCol idx) {
+  inline const ImVec4& GetStyleColorVec4(Col idx) {
     return GetStyleColorVec4(static_cast<ImGuiCol>(idx));
   }
   inline ImU32 GetColorU32(Col idx, float alpha_mul = 1.0f) {
@@ -646,11 +646,11 @@ namespace ImGui {
   template <>
   struct ec_detail::is_enum_flag<DragDropFlags> : std::true_type {};
 
-  inline bool BeginDragDropSource(ImGuiDragDropFlags flags) {
+  inline bool BeginDragDropSource(DragDropFlags flags) {
     return ImGui::BeginDragDropSource(static_cast<ImGuiDragDropFlags>(flags));
   }
   inline const ImGuiPayload* AcceptDragDropPayload(
-    const char* type, ImGuiDragDropFlags flags) {
+    const char* type, DragDropFlags flags) {
     return ImGui::AcceptDragDropPayload(
       type, static_cast<ImGuiDragDropFlags>(flags));
   }
