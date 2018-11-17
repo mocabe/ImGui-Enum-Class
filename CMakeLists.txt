@@ -1,2 +1,3 @@
+project(ImGui_Enum_Class)
 add_library(imgui_EnumClass INTERFACE)
-target_include_directories(imgui_EnumClass INTERFACE ${CMAKE_CURRENT_DIR})
+target_include_directories(imgui_EnumClass INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
