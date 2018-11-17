@@ -1,4 +1,4 @@
-# ImGui enum class extension (WIP)
+# ImGui enum class extension
 
 Enable `enum class` types in `ImGui` namespace.  
 Please be aware of that this library will directory add enum class definitions and wrappers into `ImGui` namespace.  
