@@ -465,7 +465,7 @@ namespace ImGui {
   // DrawListFlags
 
   /// ImDrawListFlags
-  enum class DrawListFlags :int {
+  enum class DrawListFlags : int {
     AntiAliasedLines = ImDrawListFlags_AntiAliasedLines,
     AntiAliasedFill  = ImDrawListFlags_AntiAliasedFill,
   };
@@ -490,7 +490,7 @@ namespace ImGui {
   // BackendFlags
 
   /// ImGuiBackendFlags
-  enum class BackendFlags {
+  enum class BackendFlags : int {
     HasGamepad      = ImGuiBackendFlags_HasGamepad,
     HasMouseCursors = ImGuiBackendFlags_HasMouseCursors,
     HasSetMousePos  = ImGuiBackendFlags_HasSetMousePos,
@@ -570,7 +570,7 @@ namespace ImGui {
   // ColumnsFlags
 
   /// ImGuiColumnsFlags
-  enum class ColumnsFlags {
+  enum class ColumnsFlags : int {
     // empty?
   };
 
@@ -600,7 +600,7 @@ namespace ImGui {
   // ComboFlags
 
   /// ImGuiComboFlags
-  enum class ComboFlags {
+  enum class ComboFlags : int {
     None           = ImGuiComboFlags_None,
     PopupAlignLeft = ImGuiComboFlags_PopupAlignLeft,
     HeightSmall    = ImGuiComboFlags_HeightSmall,
@@ -625,7 +625,7 @@ namespace ImGui {
   // DragDropFlags
 
   /// ImGuiDragDropFlags
-  enum class DragDropFlags {
+  enum class DragDropFlags : int {
     // clang-format off
     ImGuiDragDropFlags_None                     = ImGuiDragDropFlags_None,
     // BeginDragDropSource() flags,
@@ -659,7 +659,7 @@ namespace ImGui {
   // FocusedFlags
 
   /// ImGuiFocusedFlags
-  enum class FocusedFlags {
+  enum class FocusedFlags : int {
     None                = ImGuiFocusedFlags_None,
     ChildWindows        = ImGuiFocusedFlags_ChildWindows,
     RootWindow          = ImGuiFocusedFlags_RootWindow,
@@ -678,7 +678,7 @@ namespace ImGui {
   // HoverredFlags
 
   /// ImGuiHoverredFlags
-  enum class HoveredFlags {
+  enum class HoveredFlags : int {
   // clang-format off
     None                         = ImGuiHoveredFlags_None,
     ChildWindows                 = ImGuiHoveredFlags_ChildWindows,
@@ -868,7 +868,7 @@ namespace ImGui {
   // SelectableFlags
 
   /// ImGuiSelectableFlags
-  enum class SelectableFlags {
+  enum class SelectableFlags : int {
     None             = ImGuiSelectableFlags_None,
     DontClosePopups  = ImGuiSelectableFlags_DontClosePopups,
     SpanAllColumns   = ImGuiSelectableFlags_SpanAllColumns,
