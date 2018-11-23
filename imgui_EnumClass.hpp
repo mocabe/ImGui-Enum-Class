@@ -84,6 +84,15 @@ namespace ImGui {
     return static_cast<Flag>(~(to_underlying_type(flag)));
   }
 
+  // operator!
+  template <
+    class Flag,
+    std::enable_if_t<ec_detail::is_enum_flag_v<Flag>, std::nullptr_t> = nullptr>
+  constexpr bool operator!(Flag flag) {
+    using namespace ec_detail;
+    return !(to_underlying_type(flag));
+  }
+
   // ----------------------------------------
   // Col
 
