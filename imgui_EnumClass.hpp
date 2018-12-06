@@ -636,19 +636,19 @@ namespace ImGui {
   /// ImGuiDragDropFlags
   enum class DragDropFlags : int {
     // clang-format off
-    ImGuiDragDropFlags_None                     = ImGuiDragDropFlags_None,
+    None                     = ImGuiDragDropFlags_None,
     // BeginDragDropSource() flags,
-    ImGuiDragDropFlags_SourceNoPreviewTooltip   = ImGuiDragDropFlags_SourceNoPreviewTooltip,
-    ImGuiDragDropFlags_SourceNoDisableHover     = ImGuiDragDropFlags_SourceNoDisableHover,
-    ImGuiDragDropFlags_SourceNoHoldToOpenOthers = ImGuiDragDropFlags_SourceNoHoldToOpenOthers,
-    ImGuiDragDropFlags_SourceAllowNullID        = ImGuiDragDropFlags_SourceAllowNullID,
-    ImGuiDragDropFlags_SourceExtern             = ImGuiDragDropFlags_SourceExtern,
-    ImGuiDragDropFlags_SourceAutoExpirePayload  = ImGuiDragDropFlags_SourceAutoExpirePayload,
+    SourceNoPreviewTooltip   = ImGuiDragDropFlags_SourceNoPreviewTooltip,
+    SourceNoDisableHover     = ImGuiDragDropFlags_SourceNoDisableHover,
+    SourceNoHoldToOpenOthers = ImGuiDragDropFlags_SourceNoHoldToOpenOthers,
+    SourceAllowNullID        = ImGuiDragDropFlags_SourceAllowNullID,
+    SourceExtern             = ImGuiDragDropFlags_SourceExtern,
+    SourceAutoExpirePayload  = ImGuiDragDropFlags_SourceAutoExpirePayload,
      // AcceptDragDropPayload() flags,
-    ImGuiDragDropFlags_AcceptBeforeDelivery     = ImGuiDragDropFlags_AcceptBeforeDelivery,
-    ImGuiDragDropFlags_AcceptNoDrawDefaultRect  = ImGuiDragDropFlags_AcceptNoDrawDefaultRect,
-    ImGuiDragDropFlags_AcceptNoPreviewTooltip   = ImGuiDragDropFlags_AcceptNoPreviewTooltip,
-    ImGuiDragDropFlags_AcceptPeekOnly           = ImGuiDragDropFlags_AcceptPeekOnly,
+    AcceptBeforeDelivery     = ImGuiDragDropFlags_AcceptBeforeDelivery,
+    AcceptNoDrawDefaultRect  = ImGuiDragDropFlags_AcceptNoDrawDefaultRect,
+    AcceptNoPreviewTooltip   = ImGuiDragDropFlags_AcceptNoPreviewTooltip,
+    AcceptPeekOnly           = ImGuiDragDropFlags_AcceptPeekOnly,
     // clang-format on
   };
 
